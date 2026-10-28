@@ -1,0 +1,11 @@
+includes:
+    - vendor/larastan/larastan/extension.neon
+
+parameters:
+    # Analyse as PHP 8.3 so any 8.4-only syntax or function is reported.
+    phpVersion: 80300
+    level: 6
+    paths:
+        - app
+        - routes
+        - database

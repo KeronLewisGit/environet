@@ -1,0 +1,14 @@
+# Hostinger Git deployment: the repository is deployed straight into public_html/,
+# so every request is forwarded to Laravel's public/ folder. Nothing outside
+# public/ (.env, storage/, vendor/, .git/) is ever served directly.
+<IfModule mod_rewrite.c>
+    Options -Indexes
+    RewriteEngine On
+
+    # Force HTTPS
+    RewriteCond %{HTTPS} !=on
+    RewriteCond %{HTTP:X-Forwarded-Proto} !https
+    RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+
+    RewriteRule ^(.*)$ public/$1 [L]
+</IfModule>
