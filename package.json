@@ -5,7 +5,7 @@
     "scripts": {
         "build": "vite build",
         "dev": "vite",
-        "proposal": "node scripts/proposal/capture.mjs && node scripts/proposal/build.mjs",
+        "proposal": "node scripts/proposal/capture.mjs && node scripts/proposal/motion.mjs && node scripts/proposal/build.mjs",
         "capability": "node scripts/capability-pdf.mjs"
     },
     "devDependencies": {

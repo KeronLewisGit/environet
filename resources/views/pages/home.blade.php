@@ -1,4 +1,5 @@
 @php
+    $all = \App\Support\Portfolio::all();
     $services = (array) enet('services');
     $reg = (array) enet('registration');
     $offices = (array) enet('offices');
@@ -11,7 +12,7 @@
             <div class="hero-scrim absolute inset-0"></div>
         </div>
         <div class="wrap grid gap-10 pb-14 pt-12 md:pb-24 md:pt-24 lg:grid-cols-[minmax(0,1fr)_20rem] lg:items-end">
-            <div class="min-w-0">
+            <div class="hero-in min-w-0">
                 <x-flag tone="green">Established {{ enet('founded') }} · Hawaiʻi</x-flag>
                 <h1 class="display-1 mt-6 max-w-[17ch]">Environmental, munitions response and construction services.</h1>
                 <p class="lead mt-6 max-w-[56ch] text-white/85">Environet, Inc. investigates and cleans up contaminated sites, plans and supports munitions response, and builds for the Department of Defense and other public clients, from offices in Hawaiʻi, Guam and Colorado.</p>
@@ -20,20 +21,25 @@
                     <a href="{{ route('capability') }}" class="btn btn-on-dark"><x-icon name="file" class="h-4 w-4" />Capability statement</a>
                 </div>
             </div>
-            <x-sample-tag class="hidden lg:block" />
+            <div class="relative hidden lg:block">
+                <x-sonar />
+                <x-sample-tag class="hero-tag relative" />
+            </div>
         </div>
         <span class="photo-note" style="bottom: 3rem">Environet photo: survey lanes at Waikoloa</span>
         <div class="strata" aria-hidden="true"></div>
     </section>
 
+    <x-capability-strip />
+
     {{-- Sourced figures only, each with its source. --}}
     <section class="wrap mt-14 md:mt-20" aria-labelledby="record-title">
         <h2 id="record-title" class="sr-only">On the public record</h2>
         <div class="grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
-            <div class="readout"><b>{{ enet('founded') }}</b><span class="mt-2 block text-ink-2">Year established, per the firm and its SBA profile</span></div>
-            <div class="readout"><b>HUBZone · VOSB</b><span class="mt-2 block text-ink-2">SBA certifications, active from {{ us_date($reg['certifications'][0]['since'], true) }}</span></div>
-            <div class="readout"><b>{{ usd($reg['usaspending']['last_12_months']) }}</b><span class="mt-2 block text-ink-2">Federal contract transactions in the last 12 months, per USAspending.gov</span></div>
-            <div class="readout"><b>{{ count($offices) }} offices</b><span class="mt-2 block text-ink-2">Kamuela, Honolulu, Guam and Colorado, as listed on the firm's website</span></div>
+            <div class="readout" data-reveal><b>{{ enet('founded') }}</b><span class="mt-2 block text-ink-2">Year established, per the firm and its SBA profile</span></div>
+            <div class="readout" data-reveal><b>HUBZone · VOSB</b><span class="mt-2 block text-ink-2">SBA certifications, active from {{ us_date($reg['certifications'][0]['since'], true) }}</span></div>
+            <div class="readout" data-reveal><b><span class="sr-only">{{ usd($reg['usaspending']['last_12_months']) }}</span><span aria-hidden="true" data-count="{{ round($reg['usaspending']['last_12_months'] / 1_000_000, 2) }}" data-decimals="2" data-prefix="$" data-suffix=" million">{{ usd($reg['usaspending']['last_12_months']) }}</span></b><span class="mt-2 block text-ink-2">Federal contract transactions in the last 12 months, per USAspending.gov</span></div>
+            <div class="readout" data-reveal><b><span class="sr-only">{{ count($offices) }} offices</span><span aria-hidden="true" data-count="{{ count($offices) }}" data-suffix=" offices">{{ count($offices) }} offices</span></b><span class="mt-2 block text-ink-2">Kamuela, Honolulu, Guam and Colorado, as listed on the firm's website</span></div>
         </div>
         <p class="hint mt-6">Checked {{ us_date($reg['source']['checked']) }}. <a class="text-link" href="{{ $reg['usaspending']['url'] }}" target="_blank" rel="noopener">USAspending.gov profile<span class="sr-only"> (opens in a new tab)</span></a> · <a class="text-link" href="{{ $reg['source']['url'] }}" target="_blank" rel="noopener">SBA profile<span class="sr-only"> (opens in a new tab)</span></a></p>
     </section>
@@ -81,6 +87,14 @@
                     <x-award-card :award="$award" />
                 @endforeach
             </div>
+            <div class="mt-16 grid gap-10 lg:grid-cols-[minmax(0,20rem)_minmax(0,1fr)] lg:gap-16">
+                <div>
+                    <h3 class="font-display text-2xl font-semibold tracking-tight">Year by year since {{ substr($all->min('signed'), 0, 4) }}</h3>
+                    <p class="mt-3 text-ink-2">The largest award signed in each year on the record, with its contracting office and place of performance.</p>
+                    <a href="{{ route('performance.index') }}" class="text-link mt-4 inline-flex min-h-11 items-center font-semibold">The full record</a>
+                </div>
+                <x-award-timeline :awards="$all" />
+            </div>
         </div>
     </section>
 
@@ -89,19 +103,19 @@
         <x-flag>For contracting officers and primes</x-flag>
         <h2 id="proc-title" class="display-2 mt-4 max-w-[22ch]">What a source selection or teaming call needs, in one place.</h2>
         <ol class="mt-10 grid gap-6 lg:grid-cols-3">
-            <li class="card p-6">
+            <li class="card p-6" data-reveal>
                 <span class="step" aria-hidden="true">1</span>
                 <h3 class="mt-4 font-display text-xl font-semibold">Read the capability statement</h3>
                 <p class="mt-2 text-ink-2">UEI, CAGE, NAICS codes, SBA certifications, divisions and past performance on one printable page.</p>
                 <a href="{{ route('capability') }}" class="btn btn-outline btn-sm mt-5">Open it</a>
             </li>
-            <li class="card p-6">
+            <li class="card p-6" data-reveal>
                 <span class="step" aria-hidden="true">2</span>
                 <h3 class="mt-4 font-display text-xl font-semibold">Send the RFQ or sources sought</h3>
                 <p class="mt-2 text-ink-2">Attach the solicitation or link to SAM.gov. You get a reference number straight away and a named contact.</p>
                 <a href="{{ route('solicitations.create') }}" class="btn btn-primary btn-sm mt-5">Send an RFQ</a>
             </li>
-            <li class="card p-6">
+            <li class="card p-6" data-reveal>
                 <span class="step" aria-hidden="true">3</span>
                 <h3 class="mt-4 font-display text-xl font-semibold">Share project documents</h3>
                 <p class="mt-2 text-ink-2">Bid packages, drawings and reports go out through private links that expire when the work is done.</p>
@@ -131,10 +145,12 @@
         <div class="flex flex-wrap items-end justify-between gap-4">
             <div>
                 <x-flag>Offices</x-flag>
-                <h2 id="offices-title" class="display-3 mt-4">Hawaiʻi, Guam and Colorado</h2>
+                <h2 id="offices-title" class="display-2 mt-4">Hawaiʻi, Guam and Colorado</h2>
+                <p class="measure mt-3 text-ink-2">Four offices, and work across the Pacific and the mainland.</p>
             </div>
             <a href="{{ route('contact') }}" class="btn btn-outline">Contact details<x-icon name="arrow-right" class="nudge h-4 w-4" /></a>
         </div>
+        <x-pacific-map class="mt-8" />
         <ul class="mt-8 grid gap-px overflow-hidden rounded-lg border border-line bg-line sm:grid-cols-2 lg:grid-cols-4">
             @foreach ($offices as $key => $o)
                 <li class="bg-surface p-5">

@@ -1,118 +1,70 @@
 {
-  "_fonts-DmGY6J28.css": {
-    "file": "assets/fonts-DmGY6J28.css",
-    "src": "_fonts-DmGY6J28.css"
+  "_fonts-CrHTd9Bp.css": {
+    "file": "assets/fonts-CrHTd9Bp.css",
+    "src": "_fonts-CrHTd9Bp.css"
   },
-  "_ibm-plex-sans-400-normal-C5H60-Va.woff2": {
-    "file": "assets/ibm-plex-sans-400-normal-C5H60-Va.woff2",
-    "src": "_ibm-plex-sans-400-normal-C5H60-Va.woff2"
+  "_marcellus-400-normal-86dSXJnk.woff2": {
+    "file": "assets/marcellus-400-normal-86dSXJnk.woff2",
+    "src": "_marcellus-400-normal-86dSXJnk.woff2"
   },
-  "_ibm-plex-sans-400-normal-CDDApCn2.woff2": {
-    "file": "assets/ibm-plex-sans-400-normal-CDDApCn2.woff2",
-    "src": "_ibm-plex-sans-400-normal-CDDApCn2.woff2"
+  "_marcellus-400-normal-AvMY561b.woff": {
+    "file": "assets/marcellus-400-normal-AvMY561b.woff",
+    "src": "_marcellus-400-normal-AvMY561b.woff"
   },
-  "_ibm-plex-sans-400-normal-CYLoc0-x.woff": {
-    "file": "assets/ibm-plex-sans-400-normal-CYLoc0-x.woff",
-    "src": "_ibm-plex-sans-400-normal-CYLoc0-x.woff"
+  "_marcellus-400-normal-D06jIo1e.woff": {
+    "file": "assets/marcellus-400-normal-D06jIo1e.woff",
+    "src": "_marcellus-400-normal-D06jIo1e.woff"
   },
-  "_ibm-plex-sans-400-normal-RBey6euL.woff": {
-    "file": "assets/ibm-plex-sans-400-normal-RBey6euL.woff",
-    "src": "_ibm-plex-sans-400-normal-RBey6euL.woff"
+  "_marcellus-400-normal-DkjSXVBo.woff2": {
+    "file": "assets/marcellus-400-normal-DkjSXVBo.woff2",
+    "src": "_marcellus-400-normal-DkjSXVBo.woff2"
   },
-  "_ibm-plex-sans-500-normal-6ng42L7E.woff2": {
-    "file": "assets/ibm-plex-sans-500-normal-6ng42L7E.woff2",
-    "src": "_ibm-plex-sans-500-normal-6ng42L7E.woff2"
+  "_source-sans-3-400-normal-D5P-Ud2J.woff": {
+    "file": "assets/source-sans-3-400-normal-D5P-Ud2J.woff",
+    "src": "_source-sans-3-400-normal-D5P-Ud2J.woff"
   },
-  "_ibm-plex-sans-500-normal-BgVn5rGT.woff": {
-    "file": "assets/ibm-plex-sans-500-normal-BgVn5rGT.woff",
-    "src": "_ibm-plex-sans-500-normal-BgVn5rGT.woff"
+  "_source-sans-3-400-normal-RR2C27NP.woff": {
+    "file": "assets/source-sans-3-400-normal-RR2C27NP.woff",
+    "src": "_source-sans-3-400-normal-RR2C27NP.woff"
   },
-  "_ibm-plex-sans-500-normal-D0aIdm-b.woff": {
-    "file": "assets/ibm-plex-sans-500-normal-D0aIdm-b.woff",
-    "src": "_ibm-plex-sans-500-normal-D0aIdm-b.woff"
+  "_source-sans-3-400-normal-UNsKFIBq.woff2": {
+    "file": "assets/source-sans-3-400-normal-UNsKFIBq.woff2",
+    "src": "_source-sans-3-400-normal-UNsKFIBq.woff2"
   },
-  "_ibm-plex-sans-500-normal-DakdToA3.woff2": {
-    "file": "assets/ibm-plex-sans-500-normal-DakdToA3.woff2",
-    "src": "_ibm-plex-sans-500-normal-DakdToA3.woff2"
+  "_source-sans-3-600-normal-AEyhgUpm.woff2": {
+    "file": "assets/source-sans-3-600-normal-AEyhgUpm.woff2",
+    "src": "_source-sans-3-600-normal-AEyhgUpm.woff2"
   },
-  "_ibm-plex-sans-600-normal-Cu4Hd6ag.woff": {
-    "file": "assets/ibm-plex-sans-600-normal-Cu4Hd6ag.woff",
-    "src": "_ibm-plex-sans-600-normal-Cu4Hd6ag.woff"
+  "_source-sans-3-600-normal-Ck0n4g8U.woff": {
+    "file": "assets/source-sans-3-600-normal-Ck0n4g8U.woff",
+    "src": "_source-sans-3-600-normal-Ck0n4g8U.woff"
   },
-  "_ibm-plex-sans-600-normal-CuJfVYMP.woff2": {
-    "file": "assets/ibm-plex-sans-600-normal-CuJfVYMP.woff2",
-    "src": "_ibm-plex-sans-600-normal-CuJfVYMP.woff2"
+  "_source-sans-3-600-normal-D2VZAM8_.woff": {
+    "file": "assets/source-sans-3-600-normal-D2VZAM8_.woff",
+    "src": "_source-sans-3-600-normal-D2VZAM8_.woff"
   },
-  "_ibm-plex-sans-600-normal-DIrixKbi.woff": {
-    "file": "assets/ibm-plex-sans-600-normal-DIrixKbi.woff",
-    "src": "_ibm-plex-sans-600-normal-DIrixKbi.woff"
+  "_source-sans-3-600-normal-DeckBYAU.woff2": {
+    "file": "assets/source-sans-3-600-normal-DeckBYAU.woff2",
+    "src": "_source-sans-3-600-normal-DeckBYAU.woff2"
   },
-  "_ibm-plex-sans-600-normal-DOrvGEcy.woff2": {
-    "file": "assets/ibm-plex-sans-600-normal-DOrvGEcy.woff2",
-    "src": "_ibm-plex-sans-600-normal-DOrvGEcy.woff2"
+  "_source-sans-3-700-normal-6Xi0A2be.woff2": {
+    "file": "assets/source-sans-3-700-normal-6Xi0A2be.woff2",
+    "src": "_source-sans-3-700-normal-6Xi0A2be.woff2"
   },
-  "_ibm-plex-sans-700-normal-Bth3BMcD.woff": {
-    "file": "assets/ibm-plex-sans-700-normal-Bth3BMcD.woff",
-    "src": "_ibm-plex-sans-700-normal-Bth3BMcD.woff"
+  "_source-sans-3-700-normal-B-h9tW5h.woff": {
+    "file": "assets/source-sans-3-700-normal-B-h9tW5h.woff",
+    "src": "_source-sans-3-700-normal-B-h9tW5h.woff"
   },
-  "_ibm-plex-sans-700-normal-Bxkt5Cjx.woff2": {
-    "file": "assets/ibm-plex-sans-700-normal-Bxkt5Cjx.woff2",
-    "src": "_ibm-plex-sans-700-normal-Bxkt5Cjx.woff2"
+  "_source-sans-3-700-normal-C1ecyfgK.woff": {
+    "file": "assets/source-sans-3-700-normal-C1ecyfgK.woff",
+    "src": "_source-sans-3-700-normal-C1ecyfgK.woff"
   },
-  "_ibm-plex-sans-700-normal-DZH6Xh-4.woff": {
-    "file": "assets/ibm-plex-sans-700-normal-DZH6Xh-4.woff",
-    "src": "_ibm-plex-sans-700-normal-DZH6Xh-4.woff"
-  },
-  "_ibm-plex-sans-700-normal-aMgXseD4.woff2": {
-    "file": "assets/ibm-plex-sans-700-normal-aMgXseD4.woff2",
-    "src": "_ibm-plex-sans-700-normal-aMgXseD4.woff2"
-  },
-  "_space-grotesk-500-normal-3dgZTiw9.woff": {
-    "file": "assets/space-grotesk-500-normal-3dgZTiw9.woff",
-    "src": "_space-grotesk-500-normal-3dgZTiw9.woff"
-  },
-  "_space-grotesk-500-normal-CNSSEhBt.woff": {
-    "file": "assets/space-grotesk-500-normal-CNSSEhBt.woff",
-    "src": "_space-grotesk-500-normal-CNSSEhBt.woff"
-  },
-  "_space-grotesk-500-normal-DUe3BAxM.woff2": {
-    "file": "assets/space-grotesk-500-normal-DUe3BAxM.woff2",
-    "src": "_space-grotesk-500-normal-DUe3BAxM.woff2"
-  },
-  "_space-grotesk-600-normal-BflQw4A9.woff": {
-    "file": "assets/space-grotesk-600-normal-BflQw4A9.woff",
-    "src": "_space-grotesk-600-normal-BflQw4A9.woff"
-  },
-  "_space-grotesk-600-normal-DjKNqYRj.woff2": {
-    "file": "assets/space-grotesk-600-normal-DjKNqYRj.woff2",
-    "src": "_space-grotesk-600-normal-DjKNqYRj.woff2"
-  },
-  "_space-grotesk-600-normal-DxxdqCpr.woff2": {
-    "file": "assets/space-grotesk-600-normal-DxxdqCpr.woff2",
-    "src": "_space-grotesk-600-normal-DxxdqCpr.woff2"
-  },
-  "_space-grotesk-600-normal-VcznFIpX.woff": {
-    "file": "assets/space-grotesk-600-normal-VcznFIpX.woff",
-    "src": "_space-grotesk-600-normal-VcznFIpX.woff"
-  },
-  "_space-grotesk-700-normal-BQnZhY3m.woff2": {
-    "file": "assets/space-grotesk-700-normal-BQnZhY3m.woff2",
-    "src": "_space-grotesk-700-normal-BQnZhY3m.woff2"
-  },
-  "_space-grotesk-700-normal-CwsQ-cCU.woff": {
-    "file": "assets/space-grotesk-700-normal-CwsQ-cCU.woff",
-    "src": "_space-grotesk-700-normal-CwsQ-cCU.woff"
-  },
-  "_space-grotesk-700-normal-HVCqSBdx.woff": {
-    "file": "assets/space-grotesk-700-normal-HVCqSBdx.woff",
-    "src": "_space-grotesk-700-normal-HVCqSBdx.woff"
-  },
-  "_space-grotesk-700-normal-RjhwGPKo.woff2": {
-    "file": "assets/space-grotesk-700-normal-RjhwGPKo.woff2",
-    "src": "_space-grotesk-700-normal-RjhwGPKo.woff2"
+  "_source-sans-3-700-normal-CkzU-mV9.woff2": {
+    "file": "assets/source-sans-3-700-normal-CkzU-mV9.woff2",
+    "src": "_source-sans-3-700-normal-CkzU-mV9.woff2"
   },
   "resources/css/app.css": {
-    "file": "assets/app-CtJ-TvCP.css",
+    "file": "assets/app-DmrNs4hT.css",
     "name": "app",
     "names": [
       "app.css"
@@ -121,24 +73,29 @@
     "isEntry": true,
     "assets": [
       "assets/anomalies-CdHNSe1Y.svg",
-      "assets/strata-CGion7p2.svg",
-      "assets/okina-space-grotesk-500-lFbtlQH6.woff2"
+      "assets/strata-3yn5V6Sh.svg",
+      "assets/pacific-land-BbfVcVnE.svg",
+      "assets/okina-source-sans-3-400-DQi5PRDE.woff2"
     ]
   },
-  "resources/fonts/okina-space-grotesk-500.woff2": {
-    "file": "assets/okina-space-grotesk-500-lFbtlQH6.woff2",
-    "src": "resources/fonts/okina-space-grotesk-500.woff2"
+  "resources/fonts/okina-source-sans-3-400.woff2": {
+    "file": "assets/okina-source-sans-3-400-DQi5PRDE.woff2",
+    "src": "resources/fonts/okina-source-sans-3-400.woff2"
   },
   "resources/img/anomalies.svg": {
     "file": "assets/anomalies-CdHNSe1Y.svg",
     "src": "resources/img/anomalies.svg"
   },
+  "resources/img/pacific-land.svg": {
+    "file": "assets/pacific-land-BbfVcVnE.svg",
+    "src": "resources/img/pacific-land.svg"
+  },
   "resources/img/strata.svg": {
-    "file": "assets/strata-CGion7p2.svg",
+    "file": "assets/strata-3yn5V6Sh.svg",
     "src": "resources/img/strata.svg"
   },
   "resources/js/app.js": {
-    "file": "assets/app-BxUEdGnc.js",
+    "file": "assets/app-DPKCZPod.js",
     "name": "app",
     "src": "resources/js/app.js",
     "isEntry": true

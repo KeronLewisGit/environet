@@ -74,14 +74,16 @@
 
     <div class="hidden bg-navy-950 text-[0.875rem] text-white/80 lg:block">
         <div class="wrap flex h-10 items-center gap-6">
-            <a href="{{ tel_href($phone) }}" class="inline-flex min-h-10 items-center gap-2 hover:text-white"><x-icon name="phone" class="h-4 w-4 text-[#6cc644]" />{{ format_phone($phone) }}</a>
-            <a href="mailto:{{ $email }}" class="inline-flex min-h-10 items-center gap-2 hover:text-white"><x-icon name="mail" class="h-4 w-4 text-[#6cc644]" />{{ $email }}</a>
-            <span class="num inline-flex items-center gap-2 text-white/70"><x-icon name="id-card" class="h-4 w-4 text-[#6cc644]" />UEI {{ $reg['uei'] }} · CAGE {{ $reg['cage'] }}</span>
-            <a href="{{ route('capability') }}" class="ml-auto inline-flex min-h-10 items-center gap-2 font-semibold text-white hover:text-[#b6e89c]"><x-icon name="file" class="h-4 w-4" />Capability statement</a>
+            <a href="{{ tel_href($phone) }}" class="inline-flex min-h-10 items-center gap-2 hover:text-white"><x-icon name="phone" class="h-4 w-4 text-[#3fc35a]" />{{ format_phone($phone) }}</a>
+            <a href="mailto:{{ $email }}" class="inline-flex min-h-10 items-center gap-2 hover:text-white"><x-icon name="mail" class="h-4 w-4 text-[#3fc35a]" />{{ $email }}</a>
+            <span class="num inline-flex items-center gap-2 text-white/70"><x-icon name="id-card" class="h-4 w-4 text-[#3fc35a]" />UEI {{ $reg['uei'] }} · CAGE {{ $reg['cage'] }}</span>
+            <a href="{{ route('capability') }}" class="ml-auto inline-flex min-h-10 items-center gap-2 font-semibold text-white hover:text-[#a6e8b4]"><x-icon name="file" class="h-4 w-4" />Capability statement</a>
         </div>
     </div>
 
-    <header class="sticky top-0 z-40 border-b border-line bg-surface/95 backdrop-blur">
+    <div class="scroll-progress" aria-hidden="true" data-progress></div>
+
+    <header class="site-header sticky top-0 z-40 border-b border-line bg-surface/95 backdrop-blur">
         <div class="wrap flex h-[4.5rem] items-center gap-2 min-[400px]:gap-3">
             <a href="{{ route('home') }}" class="mr-auto inline-flex min-h-11 flex-none items-center" aria-label="Environet, Inc., home"><x-logo /></a>
 
@@ -95,7 +97,7 @@
                 @endforeach
             </nav>
 
-            <button type="button" onclick="toggleTheme()" class="hidden h-11 w-11 flex-none items-center justify-center rounded text-ink-2 hover:bg-surface-2 hover:text-ink sm:inline-flex" aria-label="Switch light or dark theme">
+            <button type="button" onclick="toggleTheme(event)" class="hidden h-11 w-11 flex-none items-center justify-center rounded text-ink-2 hover:bg-surface-2 hover:text-ink sm:inline-flex" aria-label="Switch light or dark theme">
                 <x-icon name="moon" class="h-5 w-5 dark-hide" /><x-icon name="sun" class="hidden h-5 w-5 dark-show" />
             </button>
             <a href="{{ route('solicitations.create') }}" class="btn btn-primary btn-sm hidden flex-none whitespace-nowrap lg:inline-flex">Send an RFQ<x-icon name="arrow-right" class="nudge h-4 w-4" /></a>
@@ -114,7 +116,7 @@
                     <a href="{{ route('solicitations.create') }}" class="btn btn-primary">Send an RFQ</a>
                     <a href="{{ tel_href($phone) }}" class="btn btn-outline"><x-icon name="phone" class="h-4 w-4" />{{ format_phone($phone) }}</a>
                 </div>
-                <button type="button" onclick="toggleTheme()" class="mt-3 flex min-h-11 items-center gap-2 rounded px-1 text-left font-semibold text-ink-2"><x-icon name="moon" class="h-5 w-5" />Switch light or dark theme</button>
+                <button type="button" onclick="toggleTheme(event)" class="mt-3 flex min-h-11 items-center gap-2 rounded px-1 text-left font-semibold text-ink-2"><x-icon name="moon" class="h-5 w-5" />Switch light or dark theme</button>
             </nav>
         </div>
     </header>
@@ -130,7 +132,7 @@
                 <div>
                     <x-logo tone="light" />
                     <p class="mt-5 max-w-xs text-white/75">{{ enet('footer_line') }}</p>
-                    <a href="{{ tel_href($phone) }}" class="font-display mt-6 inline-flex min-h-12 items-center gap-2.5 text-2xl font-semibold text-white hover:text-[#b6e89c]"><x-icon name="phone" class="h-5 w-5" />{{ format_phone($phone) }}</a>
+                    <a href="{{ tel_href($phone) }}" class="font-display mt-6 inline-flex min-h-12 items-center gap-2.5 text-2xl font-semibold text-white hover:text-[#a6e8b4]"><x-icon name="phone" class="h-5 w-5" />{{ format_phone($phone) }}</a>
                     <p class="mt-1"><a class="inline-flex min-h-11 items-center hover:text-white" href="mailto:{{ $email }}">{{ $email }}</a></p>
                 </div>
                 <div>

@@ -25,7 +25,7 @@
     </div>
 
     <main class="cs-page my-6 border border-line p-6 shadow-sm sm:p-10 print:my-0 print:p-0">
-        <header class="flex flex-wrap items-start justify-between gap-6 border-b-[3px] border-[#003386] pb-5">
+        <header class="flex flex-wrap items-start justify-between gap-6 border-b-[3px] border-[#033491] pb-5">
             <div>
                 <x-logo />
                 <p class="mt-3 text-sm font-semibold uppercase tracking-[0.14em] text-[#33405a]">Capability statement · {{ now()->format('F Y') }}</p>
@@ -39,16 +39,16 @@
 
         <section class="mt-6 grid gap-6 sm:grid-cols-[minmax(0,1.35fr)_minmax(0,1fr)]">
             <div>
-                <h1 class="font-display text-[1.75rem] font-bold leading-tight tracking-tight text-[#003386]">{{ enet('name') }}</h1>
+                <h1 class="font-brand text-[1.9rem] font-normal leading-tight text-[#033491]">{{ enet('name') }}</h1>
                 <p class="mt-2 text-[0.9375rem] leading-relaxed">{{ $about['intro'] }}</p>
-                <h2 class="mt-5 border-b border-[#0f1d33] pb-1 text-xs font-bold uppercase tracking-[0.16em]">Differentiators</h2>
+                <h2 class="font-sans mt-5 border-b border-[#0d2a4d] pb-1 text-xs font-bold uppercase tracking-[0.16em]">Differentiators</h2>
                 <ul class="mt-2 list-disc space-y-1 pl-5 text-[0.875rem]">
                     @foreach ($about['strengths'] as $s)<li>{{ $s }}</li>@endforeach
                     <li>SBA-certified HUBZone and Veteran-Owned Small Business.</li>
                 </ul>
             </div>
             <div class="self-start rounded border border-[#c9c0a2] bg-[#f1ecdc] p-4 text-sm">
-                <p class="border-b-2 border-[#0f1d33] pb-1 font-display text-xs font-bold uppercase tracking-[0.14em]">Company data</p>
+                <p class="border-b-2 border-[#0d2a4d] pb-1 font-display text-xs font-bold uppercase tracking-[0.14em]">Company data</p>
                 <dl class="mt-2 grid grid-cols-[auto_minmax(0,1fr)] gap-x-4 gap-y-1">
                     <dt class="text-[#5a5440]">UEI</dt><dd class="num font-semibold">{{ $reg['uei'] }}</dd>
                     <dt class="text-[#5a5440]">CAGE</dt><dd class="num font-semibold">{{ $reg['cage'] }}</dd>
@@ -64,11 +64,11 @@
         </section>
 
         <section class="mt-5">
-            <h2 class="border-b border-[#0f1d33] pb-1 text-xs font-bold uppercase tracking-[0.16em]">Core competencies</h2>
+            <h2 class="font-sans border-b border-[#0d2a4d] pb-1 text-xs font-bold uppercase tracking-[0.16em]">Core competencies</h2>
             <div class="mt-3 grid gap-x-6 gap-y-3 text-[0.8125rem] sm:grid-cols-3">
                 @foreach ($services as $s)
                     <div>
-                        <p class="font-display text-[0.9375rem] font-bold text-[#003386]">{{ $s['title'] }}</p>
+                        <p class="font-display text-[0.9375rem] font-bold text-[#033491]">{{ $s['title'] }}</p>
                         <ul class="mt-1 list-disc space-y-0.5 pl-4">@foreach (array_slice($s['items'], 0, 8) as $i)<li>{{ $i }}</li>@endforeach</ul>
                     </div>
                 @endforeach
@@ -76,14 +76,14 @@
         </section>
 
         <section class="mt-5 cs-break print:mt-0">
-            <h2 class="border-b border-[#0f1d33] pb-1 text-xs font-bold uppercase tracking-[0.16em]">NAICS codes (selected; {{ $reg['naics_count'] }} registered)</h2>
+            <h2 class="font-sans border-b border-[#0d2a4d] pb-1 text-xs font-bold uppercase tracking-[0.16em]">NAICS codes (selected; {{ $reg['naics_count'] }} registered)</h2>
             <ul class="mt-2 grid gap-x-6 gap-y-0.5 text-[0.8125rem] sm:grid-cols-2">
                 @foreach ($reg['naics'] as $code => $label)<li><span class="num font-semibold">{{ $code }}</span> {{ $label }}@if($code === $reg['naics_primary']) <em>(primary)</em>@endif</li>@endforeach
             </ul>
         </section>
 
         <section class="mt-5">
-            <h2 class="border-b border-[#0f1d33] pb-1 text-xs font-bold uppercase tracking-[0.16em]">Federal past performance (USAspending.gov)</h2>
+            <h2 class="font-sans border-b border-[#0d2a4d] pb-1 text-xs font-bold uppercase tracking-[0.16em]">Federal past performance (USAspending.gov)</h2>
             <div class="overflow-x-auto">
                 <table class="mt-2 w-full min-w-[36rem] border-collapse text-left text-[0.8125rem] print:text-[0.75rem]">
                     <thead><tr class="border-b border-[#9aa3b5] text-[0.6875rem] uppercase tracking-wider text-[#33405a]"><th class="py-1 pr-3 font-bold">Award</th><th class="py-1 pr-3 font-bold">Agency / office</th><th class="py-1 pr-3 font-bold">Awarded</th><th class="py-1 pr-3 text-right font-bold">Obligated</th><th class="py-1 font-bold">PIID</th></tr></thead>
@@ -105,17 +105,17 @@
 
         <section class="mt-5 grid gap-6 text-[0.875rem] break-inside-avoid sm:grid-cols-2">
             <div>
-                <h2 class="border-b border-[#0f1d33] pb-1 text-xs font-bold uppercase tracking-[0.16em]">Offices</h2>
+                <h2 class="font-sans border-b border-[#0d2a4d] pb-1 text-xs font-bold uppercase tracking-[0.16em]">Offices</h2>
                 <ul class="mt-2 space-y-1">
                     @foreach ($offices as $o)<li><strong>{{ $o['label'] }}:</strong> {{ $o['street'] ? $o['street'].', '.$o['city'] : $o['city'].' (address on request)' }}</li>@endforeach
                 </ul>
             </div>
             <div>
-                <h2 class="border-b border-[#0f1d33] pb-1 text-xs font-bold uppercase tracking-[0.16em]">Contact</h2>
+                <h2 class="font-sans border-b border-[#0d2a4d] pb-1 text-xs font-bold uppercase tracking-[0.16em]">Contact</h2>
                 <p class="mt-2">Tel. {{ format_phone(enet('phone')) }} · Fax {{ format_phone(enet('fax')) }}<br>{{ enet('email') }}<br>RFQs and bid inquiries: {{ $web }}/rfq<br>Teaming and vendors: {{ $web }}/teaming</p>
             </div>
         </section>
-        <footer class="mt-5 flex items-center justify-between border-t-[3px] border-[#43a01b] pt-2 text-[0.6875rem] uppercase tracking-[0.14em] text-[#33405a]"><span>{{ enet('tagline') }}</span><span>{{ enet('short_name') }} · UEI {{ $reg['uei'] }}</span></footer>
+        <footer class="mt-5 flex items-center justify-between border-t-[3px] border-[#01a02c] pt-2 text-[0.6875rem] uppercase tracking-[0.14em] text-[#33405a]"><span>{{ enet('tagline') }}</span><span>{{ enet('short_name') }} · UEI {{ $reg['uei'] }}</span></footer>
     </main>
 </body>
 </html>

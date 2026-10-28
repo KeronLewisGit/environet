@@ -1,32 +1,15 @@
 import Alpine from 'alpinejs';
+import { startMotion, switchTheme } from './motion';
 
 document.documentElement.classList.add('js'); // also set in <head>; kept for safety
 
 /* Theme toggle. The initial theme is set by an inline script in <head> to avoid a flash. */
-window.toggleTheme = () => {
+window.toggleTheme = (event) => {
     const root = document.documentElement;
     const current = root.dataset.theme || (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
     const next = current === 'dark' ? 'light' : 'dark';
-    root.dataset.theme = next;
+    switchTheme(() => { root.dataset.theme = next; }, event);
     try { localStorage.setItem('theme', next); } catch (e) { /* storage blocked: the choice lasts this page only */ }
-};
-
-/* Scroll reveal */
-const reveal = () => {
-    const items = document.querySelectorAll('[data-reveal]');
-    if (!('IntersectionObserver' in window)) {
-        items.forEach((el) => el.classList.add('is-visible'));
-        return;
-    }
-    const io = new IntersectionObserver((entries) => {
-        entries.forEach((entry) => {
-            if (entry.isIntersecting) {
-                entry.target.classList.add('is-visible');
-                io.unobserve(entry.target);
-            }
-        });
-    }, { rootMargin: '0px 0px -8% 0px' });
-    items.forEach((el) => io.observe(el));
 };
 
 /* Submit buttons: one press only, with a visible "Sending…" state. */
@@ -95,5 +78,5 @@ Alpine.data('adminShell', () => ({
 
 window.Alpine = Alpine;
 Alpine.start();
-if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', reveal);
-else reveal();
+if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', startMotion);
+else startMotion();

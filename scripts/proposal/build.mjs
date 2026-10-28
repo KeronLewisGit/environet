@@ -1,5 +1,5 @@
 // Builds the client proposal (letter-size PDF) from the captured screenshots, in the site's own
-// palette and fonts (survey navy, brand green and flag orange; Space Grotesk and IBM Plex Sans).
+// palette and fonts (environetinc.com navy and green, flag orange; Marcellus headings and Source Sans 3).
 // Usage: npm run proposal (or node scripts/proposal/build.mjs after a capture).
 import puppeteer from 'puppeteer-core';
 import fs from 'node:fs';
@@ -13,7 +13,7 @@ const OUT_HTML = path.resolve('dist/proposal/proposal.html');
 const OUT_PDF = path.resolve('dist/proposal/Environet-Website-Proposal.pdf');
 const MAX_MB = 9.5;
 const DATE = new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
-const TESTS = process.env.TEST_COUNT ?? '106';
+const TESTS = process.env.TEST_COUNT ?? '111';
 const img = (f) => 'file://' + f;
 // The cover photo as a JPEG: Chrome embeds JPEGs as they are but re-encodes WebP losslessly, which
 // would add several megabytes. macOS sips does the conversion.
@@ -25,37 +25,39 @@ const esc = (s) => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;');
 
 // The site's self-hosted fonts (built by the Vite fonts plugin into public/build/assets).
 const ASSETS = path.join(ROOT, 'public/build/assets');
-// Each weight comes in a latin and a latin-ext file; take the latin one (the face whose
-// unicode-range starts at U+0000 in the plugin's fonts CSS), or the only file there is.
+// Each weight comes in a latin and a latin-ext file; take the latin one: the woff2 in the
+// @font-face block (for that family and weight) whose unicode-range starts at U+0000. Read the
+// URL from the CSS rather than guessing by file name, because Vite de-duplicates identical files
+// (the latin Source Sans 3 400 file is also the "Okina" face, so it keeps that name).
 const FONT_CSS = fs.readdirSync(ASSETS).filter((n) => n.startsWith('fonts-') && n.endsWith('.css')).map((n) => fs.readFileSync(path.join(ASSETS, n), 'utf8')).join('\n');
-const LATIN = new Set([...FONT_CSS.matchAll(/url\("[^"]*\/([^"/]+\.woff2)"\)[^}]*unicode-range: U\+0000-00FF/g)].map((m) => m[1]));
-const font = (prefix) => {
-  const all = fs.readdirSync(ASSETS).filter((n) => n.startsWith(prefix) && n.endsWith('.woff2'));
-  const f = all.find((n) => LATIN.has(n)) ?? all[0];
-  if (!f) throw new Error(`Font ${prefix} not found in public/build/assets; run npm run build first.`);
-  return 'file://' + path.join(ASSETS, f);
+const BLOCKS = [...FONT_CSS.matchAll(/@font-face\s*{([^}]*)}/g)].map((m) => m[1]);
+const font = (family, weight) => {
+  const block = BLOCKS.find((b) => b.includes(`font-family: "${family}"`) && new RegExp(`font-weight:\\s*${weight}\\b`).test(b) && /unicode-range: U\+0000-00FF/.test(b) && /\.woff2"/.test(b));
+  const url = block?.match(/url\("\/build\/assets\/([^"]+\.woff2)"\)/)?.[1];
+  if (!url) throw new Error(`Font ${family} ${weight} not found in public/build/assets; run npm run build first.`);
+  return 'file://' + path.join(ASSETS, url);
 };
+const OKINA = 'file://' + path.join(ROOT, 'resources/fonts/okina-source-sans-3-400.woff2');
 const FONTS = [
-  ['Space Grotesk', 600, 'space-grotesk-600-normal'], ['Space Grotesk', 700, 'space-grotesk-700-normal'],
-  ['IBM Plex Sans', 400, 'ibm-plex-sans-400-normal'], ['IBM Plex Sans', 500, 'ibm-plex-sans-500-normal'],
-  ['IBM Plex Sans', 600, 'ibm-plex-sans-600-normal'], ['IBM Plex Sans', 700, 'ibm-plex-sans-700-normal'],
-  ['Okina', 400, 'okina-space-grotesk-500'],
-].map(([fam, w, p]) => `@font-face { font-family: "${fam}"; font-weight: ${fam === 'Okina' ? '100 900' : w}; font-style: normal; src: url("${font(p)}") format("woff2");${fam === 'Okina' ? ' unicode-range: U+02BB;' : ''} }`).join('\n');
+  ['Source Sans 3', 400], ['Source Sans 3', 600], ['Source Sans 3', 700], ['Marcellus', 400],
+].map(([fam, w]) => `@font-face { font-family: "${fam}"; font-weight: ${w}; font-style: normal; src: url("${font(fam, w)}") format("woff2"); }`).join('\n')
+  + `\n@font-face { font-family: "Okina"; font-weight: 100 900; src: url("${OKINA}") format("woff2"); unicode-range: U+02BB; }`
 
 // The site's vector redraw of the firm's "e" ring mark (navy ring, green landmasses and dot).
-const MARK = (h = 34, ring = '#003386') => `<span class="mark"><svg viewBox="0 0 100 100" width="${h}" height="${h}"><g fill="#43a01b"><circle cx="86" cy="13" r="8.5"/><path d="M31 7c9-6 23-7 32-2 5 3 8 7 10 12-7-4-13-6-21-5-8 1-15-1-21-5z"/><path d="M0 45c5-4 12-6 19-4l3 3c-6 0-11 1-15 3-3 1-5 0-7-2z"/><path d="M53 84c5 3 7 7 7 12 0 2-1 3-2 4-3-3-3-7-3-11 0-2-1-3-2-5z"/><path d="M87 38c5 5 8 12 7 20-1 7-3 11-7 15 0-7 1-12 0-18-1-7-3-11-6-15z"/><path d="M30 53c16 2 33 1 46-4 4-2 6-5 7-10l4 1c-1 6-5 11-11 14-13 5-29 6-46 5z"/></g><path fill="${ring}" d="M79 36C74 23 64 16 52 16 36 16 23 30 23 50s12 34 29 34c11 0 20-5 27-14l-3-2c-6 7-13 11-21 11-13 0-23-12-23-29S38 20 52 20c10 0 17 6 21 17z"/></svg></span>`;
-const WORDMARK = (dark = true) => `<div class="brand">${MARK(dark ? 46 : 36, dark ? '#ffffff' : '#003386')}<div><span class="n ${dark ? '' : 'ink'}">environet<span class="inc">, inc.</span></span><span class="s ${dark ? '' : 'ink'}">Since 1995 · Hawaiʻi</span></div></div>`;
+const MARK = (h = 34, ring = '#033491') => `<span class="mark"><svg viewBox="0 0 100 100" width="${h}" height="${h}"><g fill="#01a02c"><circle cx="86" cy="13" r="8.5"/><path d="M31 7c9-6 23-7 32-2 5 3 8 7 10 12-7-4-13-6-21-5-8 1-15-1-21-5z"/><path d="M0 45c5-4 12-6 19-4l3 3c-6 0-11 1-15 3-3 1-5 0-7-2z"/><path d="M53 84c5 3 7 7 7 12 0 2-1 3-2 4-3-3-3-7-3-11 0-2-1-3-2-5z"/><path d="M87 38c5 5 8 12 7 20-1 7-3 11-7 15 0-7 1-12 0-18-1-7-3-11-6-15z"/><path d="M30 53c16 2 33 1 46-4 4-2 6-5 7-10l4 1c-1 6-5 11-11 14-13 5-29 6-46 5z"/></g><path fill="${ring}" d="M79 36C74 23 64 16 52 16 36 16 23 30 23 50s12 34 29 34c11 0 20-5 27-14l-3-2c-6 7-13 11-21 11-13 0-23-12-23-29S38 20 52 20c10 0 17 6 21 17z"/></svg></span>`;
+const WORDMARK = (dark = true) => `<div class="brand">${MARK(dark ? 46 : 36, dark ? '#ffffff' : '#033491')}<div><span class="n ${dark ? '' : 'ink'}">Environet, Inc.</span><span class="s ${dark ? '' : 'ink'}">Preserving Earth's Resources for the Future</span></div></div>`;
 // The site's survey pin flag, used as the section label.
-const plate = (code, label, dark = false) => `<p class="plate ${dark ? 'dark' : ''}"><svg viewBox="0 0 12 14" width="10" height="12"><path d="M1 0v14" stroke="currentColor" stroke-width="2"/><path d="M2 1h9l-2.5 3L11 7H2z" fill="${dark ? '#f08a24' : '#43a01b'}"/></svg><span class="c">${esc(code)}</span><span class="l">${esc(label)}</span></p>`;
+const plate = (code, label, dark = false) => `<p class="plate ${dark ? 'dark' : ''}"><svg viewBox="0 0 12 14" width="10" height="12"><path d="M1 0v14" stroke="currentColor" stroke-width="2"/><path d="M2 1h9l-2.5 3L11 7H2z" fill="${dark ? '#f08a24' : '#01a02c'}"/></svg><span class="c">${esc(code)}</span><span class="l">${esc(label)}</span></p>`;
 
 /** Hand-written captions per slice (key = screen name, index = slice number), from what each slice shows. */
 const CAPTIONS = {
   home: [
-    'Hero on the firm\'s own photograph of geophysical survey lanes at Waikoloa, the two actions a contracting officer needs (send an RFQ, open the capability statement) and a chain-of-custody tag with the UEI, CAGE, primary NAICS and SBA status. Below it, four figures from the public record, each with its source.',
+    'Hero on the firm\'s own photograph of geophysical survey lanes at Waikoloa, the two actions a contracting officer needs (send an RFQ, open the capability statement) and a chain-of-custody tag with the UEI, CAGE, primary NAICS and SBA status. Under it, the NAICS capability strip and four figures from the public record, each with its source.',
     'The three divisions, in the firm\'s own words, each opening the services page at the right place.',
     'Federal awards exactly as USAspending.gov publishes them: agency, office, obligated amount, award date and period of performance.',
+    'The record year by year: the largest federal award signed in each year since 2008, with its contracting office, place and value.',
     'For contracting officers and primes: the capability statement, the RFQ form and private document sharing, then teaming registration and careers.',
-    'All four offices as the firm lists them, and the footer with the registration identifiers.',
+    'All four offices on a Pacific map with routes to Guam, Colorado, award sites and earlier work named on the firm\'s website, each with its source, then the footer with the registration identifiers.',
   ],
   services: [
     'Services: environmental services with every service line from the firm\'s website and, beside it, the awards on the public record that show it.',
@@ -173,7 +175,7 @@ const SECTIONS = [
 const SCREEN_COUNT = SECTIONS.reduce((n, s) => n + s.screens.length, 0);
 
 const FEATURES = [
-  ['Public website', ['Three divisions linked to awards', 'Past performance from USAspending.gov', 'One page per award, with its source', 'Capability statement page and PDF', 'Munitions safety (3Rs) message', 'About and four offices', 'Redirects from the old site\'s links', 'Sitemap and Google structured data']],
+  ['Public website', ['Three divisions linked to awards', 'Past performance from USAspending.gov', 'One page per award, with its source', 'Capability statement page and PDF', 'Munitions safety (3Rs) message', 'About and four offices', 'Redirects from the old site\'s links', 'Sitemap and Google structured data', 'Pacific office map and award timeline', 'Motion that honours reduced-motion settings']],
   ['Intake', ['RFQ and bid inquiry with documents', 'Teaming and vendor registration', 'UEI, CAGE, NAICS and set-asides', 'Insurance and license expiry tracking', 'Signed renewal links', 'Careers with office choice', 'Applicant certifications with expiry dates', 'Reference number on screen and by email']],
   ['Back office', ['Overview that leads with each role\'s number', 'Bid register with response dates', 'Vendor register and document checks', 'Applications, certification checks and postings', 'Document rooms with signed links', 'Notes and a timeline on every record', 'CSV exports', 'Four staff roles']],
   ['Platform', ['Laravel 13 on PHP 8.3', 'HTTPS throughout', 'All uploads stored privately', 'Each team opens only its own files', 'Rate-limited, spam-protected forms', 'Light and dark themes', `${TESTS} automated tests`, 'Packaged for one-zip installation']],
@@ -251,6 +253,12 @@ function screenPages(sec, [key, title, bullets]) {
 
 
 const foot = () => `<footer class="foot"><span class="fl">${MARK(14)}Environet, Inc. · Website proposal</span><span>Code Canvas Consultants Ltd · ${esc(DATE)}</span></footer>`;
+const MOTION = path.join(SHOTS, 'motion');
+const STILL = (name, title, caption) => {
+  const f = path.join(MOTION, `${name}.jpg`);
+  if (!fs.existsSync(f)) throw new Error(`Missing ${f}; run node scripts/proposal/motion.mjs first.`);
+  return `<figure class="still"><img src="${img(f)}" alt="${esc(title)}"><figcaption><b>${esc(title)}</b>${esc(caption)}</figcaption></figure>`;
+};
 const notes = (list) => `<div class="phone-notes">${list.map(([t, d]) => `<div><b>${esc(t)}</b>${esc(d)}</div>`).join('')}</div>`;
 const phones = (list) => `<div class="phones">${list.map(([k, c]) => `<figure><img src="${img(chunks[k].chunks[0])}" alt="${esc(c)}"><figcaption>${esc(c)}</figcaption></figure>`).join('')}</div>`;
 
@@ -259,11 +267,11 @@ const html = `<!doctype html><html lang="en-US"><head><meta charset="utf-8"><tit
 
   ${FONTS}
   @page { size: Letter; margin: 0.5in 0.6in 0.55in; }
-  :root { --graphite: #071a40; --graphite-950: #04112b; --gm: #0b2557; --bg: #f5f6f2; --surface-2: #e9ebe4; --ink: #0f1d33; --ink-2: #33405a; --ink-3: #55607a; --line: #d6d9d0; --coral: #f08a24; --coral-text: #003386; --coral-soft: #eaf0fb; --green: #43a01b; --leaf-text: #2c6e10; --manila: #f1ecdc; }
+  :root { --graphite: #002a54; --graphite-950: #001b38; --gm: #003366; --bg: #f5f8fb; --surface-2: #e8eef5; --ink: #0d2a4d; --ink-2: #3a4f6b; --ink-3: #52627a; --line: #d6dee8; --coral: #f08a24; --coral-text: #033491; --coral-soft: #eaf0fb; --green: #01a02c; --leaf-text: #007a2a; --manila: #f1ecdc; }
   * { box-sizing: border-box; }
-  html, body { margin: 0; padding: 0; font-family: "Okina", "IBM Plex Sans", system-ui, sans-serif; color: var(--ink); font-size: 10.5pt; line-height: 1.45; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
-  h1, h2, h3, .display { font-family: "Okina", "Space Grotesk", system-ui, sans-serif; font-weight: 700; letter-spacing: -0.03em; color: var(--ink); margin: 0; line-height: 1.05; }
-  h3 { font-family: "Okina", "IBM Plex Sans", system-ui, sans-serif; letter-spacing: 0; font-size: 12pt; }
+  html, body { margin: 0; padding: 0; font-family: "Source Sans 3", system-ui, sans-serif; color: var(--ink); font-size: 10.5pt; line-height: 1.45; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  h1, h2, h3, .display { font-family: "Okina", "Marcellus", Georgia, serif; font-weight: 400; font-synthesis: none; letter-spacing: -0.01em; color: var(--ink); margin: 0; line-height: 1.05; }
+  h3 { font-family: "Source Sans 3", system-ui, sans-serif; font-weight: 700; letter-spacing: 0; font-size: 12pt; }
   .page { page-break-after: always; break-after: page; height: 9.95in; display: flex; flex-direction: column; overflow: hidden; }
   .page:last-child { page-break-after: auto; }
   .eyebrow { font-size: 8pt; font-weight: 700; letter-spacing: .16em; text-transform: uppercase; color: var(--coral-text); margin: 0 0 5px; }
@@ -271,27 +279,27 @@ const html = `<!doctype html><html lang="en-US"><head><meta charset="utf-8"><tit
   /* number-plate label, as on the site */
   .plate { align-self: flex-start; display: inline-flex; border: 1.5px solid currentColor; border-radius: 3px; padding: 2px; font-size: 7.5pt; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; line-height: 1; color: var(--ink-2); margin: 0 0 12px; }
   .plate span { display: inline-flex; align-items: center; padding: 5px 7px 4px; border-radius: 3px; }
-  .plate .c { background: var(--ink); color: var(--bg); font-family: "Space Grotesk"; font-weight: 800; letter-spacing: .04em; }
+  .plate .c { background: var(--ink); color: var(--bg); font-family: "Source Sans 3"; font-weight: 800; letter-spacing: .04em; }
   .plate .l { box-shadow: inset 0 0 0 1px rgba(0,0,0,.18); margin-left: 2px; }
   .plate.dark { color: rgba(255,255,255,.85); } .plate.dark .c { background: var(--coral); color: var(--graphite); } .plate.dark .l { box-shadow: inset 0 0 0 1px rgba(255,255,255,.28); }
   .ticks { height: 6px; background: linear-gradient(var(--green), var(--green)) top / 100% 3px no-repeat, linear-gradient(var(--coral), var(--coral)) bottom / 100% 3px no-repeat; }
   /* cover and dividers: the site's graphite hero band */
   .dark-page { background: var(--graphite); color: #fff; border-radius: 3px; padding: 0.6in 0.6in 0.5in; position: relative; overflow: hidden; }
   .dark-page h1 { color: #fff; }
-  .cover { justify-content: space-between; background-image: linear-gradient(180deg, rgba(4,17,43,.45), rgba(4,17,43,.94) 60%), url("${img(COVER)}"); background-size: cover; background-position: 50% 30%; }
+  .cover { justify-content: space-between; background-image: linear-gradient(180deg, rgba(0,27,56,.45), rgba(0,27,56,.94) 60%), url("${img(COVER)}"); background-size: cover; background-position: 50% 30%; }
   .cover h1 { font-size: 40pt; margin: 14px 0 16px; max-width: 6.2in; }
   .cover .accent { color: var(--coral); }
   .cover .lead { color: rgba(255,255,255,.85); font-size: 13pt; max-width: 5.8in; margin: 0; }
   .cover .meta { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; border-top: 1px solid rgba(255,255,255,.18); padding-top: 16px; font-size: 9.5pt; color: rgba(255,255,255,.8); }
   .cover .meta b { display: block; color: #fff; font-size: 9pt; letter-spacing: .14em; text-transform: uppercase; margin-bottom: 4px; }
-  .brand { display: flex; align-items: center; gap: 10px; } .brand .n { display: block; font-family: "Space Grotesk"; font-weight: 700; font-size: 17pt; color: #fff; line-height: 1; letter-spacing: -0.02em; } .brand .s { display: block; margin-top: 4px; font-size: 7pt; font-weight: 600; letter-spacing: .16em; text-transform: uppercase; color: rgba(255,255,255,.7); }
+  .brand { display: flex; align-items: center; gap: 10px; } .brand .n { display: block; font-family: "Marcellus"; font-weight: 400; font-size: 19pt; color: #fff; line-height: 1; } .brand .s { display: block; margin-top: 4px; font-size: 8pt; font-weight: 600; color: rgba(255,255,255,.75); }
   .mark { display: inline-flex; align-items: center; flex: none; background: #fff; border-radius: 5px; } .mark img { display: block; width: auto; }
   .brand .ink { color: var(--ink); } .brand .s.ink { color: var(--ink-3); }
   .divider { justify-content: center; }
   .divider h1 { font-size: 38pt; margin: 6px 0 18px; } .divider p.intro { color: rgba(255,255,255,.85); font-size: 12.5pt; max-width: 6in; margin: 0; }
   .divider ol { color: rgba(255,255,255,.85); columns: 2; font-size: 10pt; margin: 26px 0 0; padding-left: 18px; } .divider li { break-inside: avoid; margin: 3px 0; }
   .divider .note { margin-top: 22px; font-size: 9pt; color: rgba(255,255,255,.65); max-width: 6in; }
-  .strata { position: absolute; left: 0; right: 0; bottom: 0; height: 14px; background: repeating-linear-gradient(90deg, #43a01b 0 46px, #2c6e10 46px 60px, #f1ecdc 60px 132px, #f08a24 132px 140px, #0b2557 140px 220px); opacity: .9; }
+  .strata { position: absolute; left: 0; right: 0; bottom: 0; height: 14px; background: repeating-linear-gradient(90deg, #01a02c 0 46px, #007a2a 46px 60px, #f1ecdc 60px 132px, #f08a24 132px 140px, #003366 140px 220px); opacity: .9; }
   /* text pages */
   .prose h1 { font-size: 24pt; margin-bottom: 12px; }
   .prose h2 { font-size: 13pt; margin: 16px 0 6px; letter-spacing: -0.01em; }
@@ -306,7 +314,7 @@ const html = `<!doctype html><html lang="en-US"><head><meta charset="utf-8"><tit
   .src { font-size: 8pt; color: var(--ink-3); }
   .stat-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin: 12px 0 6px; }
   .stat { background: var(--graphite); color: #fff; border-radius: 3px; padding: 12px 12px 11px; }
-  .stat b { display: block; font-family: "Space Grotesk"; font-weight: 800; font-size: 22pt; line-height: 1; letter-spacing: -0.03em; color: #fff; border-left: 3px solid var(--coral); padding-left: 8px; }
+  .stat b { display: block; font-family: "Source Sans 3"; font-weight: 800; font-size: 22pt; line-height: 1; letter-spacing: -0.03em; color: #fff; border-left: 3px solid var(--coral); padding-left: 8px; }
   .stat span { display: block; margin-top: 8px; font-size: 8.5pt; color: rgba(255,255,255,.78); line-height: 1.3; }
   table.feat { width: 100%; border-collapse: collapse; font-size: 9.5pt; }
   table.feat th, table.feat td { border-bottom: 1px solid var(--line); padding: 8px 8px; text-align: left; vertical-align: top; }
@@ -330,16 +338,16 @@ const html = `<!doctype html><html lang="en-US"><head><meta charset="utf-8"><tit
   /* investment */
   .price { display: grid; grid-template-columns: 1.45fr 1fr; gap: 14px; align-items: stretch; margin: 6px 0 4px; }
   .price .big { background: var(--graphite); color: #fff; border-radius: 3px; padding: 16px 18px; }
-  .price .big .amt { white-space: nowrap; font-family: "Space Grotesk"; font-weight: 700; font-size: 26pt; line-height: 1; color: #fff; } .price .big .amt small { font-size: 11pt; font-weight: 500; color: rgba(255,255,255,.75); }
+  .price .big .amt { white-space: nowrap; font-family: "Source Sans 3"; font-weight: 700; font-size: 26pt; line-height: 1; color: #fff; } .price .big .amt small { font-size: 11pt; font-weight: 500; color: rgba(255,255,255,.75); }
   .price .big p { color: rgba(255,255,255,.82); margin: 8px 0 0; font-size: 9.6pt; }
   .price .year { border: 2px solid var(--coral-text); border-radius: 3px; padding: 14px 16px; background: var(--coral-soft); }
   .price .year div { display: flex; justify-content: space-between; gap: 8px; padding: 4px 0; border-bottom: 1px dotted #8fbdb9; font-size: 10pt; } .price .year div:last-child { border: 0; }
-  .price .year b { font-family: "Space Grotesk"; font-weight: 700; }
+  .price .year b { font-family: "Source Sans 3"; font-weight: 700; }
   .terms li { margin: 3px 0; font-size: 9.6pt; }
   .sla { width: 100%; border-collapse: collapse; font-size: 9pt; margin-top: 4px; } .sla td, .sla th { border-bottom: 1px solid var(--line); padding: 4px 6px; text-align: left; } .sla th { font-size: 7.8pt; letter-spacing: .1em; text-transform: uppercase; color: var(--ink-3); background: var(--surface-2); }
   .weeks { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin: 6px 0 10px; }
   .week { border: 1px solid var(--line); border-radius: 3px; padding: 10px 12px; background: #fff; }
-  .week b { display: inline-block; font-family: "Space Grotesk"; font-weight: 700; font-size: 8.5pt; background: var(--ink); color: var(--bg); border-radius: 4px; padding: 3px 6px; margin-bottom: 5px; }
+  .week b { display: inline-block; font-family: "Source Sans 3"; font-weight: 700; font-size: 8.5pt; background: var(--ink); color: var(--bg); border-radius: 4px; padding: 3px 6px; margin-bottom: 5px; }
   .week p { margin: 0; font-size: 9.5pt; }
   footer.foot { margin-top: auto; padding-top: 6px; font-size: 7.8pt; color: #8a939d; display: flex; justify-content: space-between; border-top: 1px solid var(--line); align-items: center; } footer.foot .fl { display: inline-flex; align-items: center; gap: 6px; }
 
@@ -354,6 +362,10 @@ const html = `<!doctype html><html lang="en-US"><head><meta charset="utf-8"><tit
   .stat b { border-left-color: var(--green); }
   .price .year { border-color: var(--coral-text); } .price .year div { border-bottom-color: #9fb3d9; }
   .pill { border-color: #b7c6e6; }
+  .stills { display: grid; grid-template-columns: 1fr 1fr; gap: 14px 16px; margin-top: 6px; }
+  .still { margin: 0; } .still img { display: block; width: 100%; border-radius: 6px; border: 1px solid var(--line); }
+  .still figcaption { font-size: 8.5pt; color: var(--ink-2); margin-top: 5px; line-height: 1.35; } .still figcaption b { display: block; color: var(--ink); font-size: 9.5pt; margin-bottom: 1px; }
+  .rules { background: var(--surface-2); border-radius: 6px; padding: 12px 14px; font-size: 9pt; } .rules ul { margin: 6px 0 0; padding-left: 16px; } .rules li { margin: 3px 0; }
 </style></head><body>
 
 <section class="page dark-page cover">
@@ -403,6 +415,8 @@ const html = `<!doctype html><html lang="en-US"><head><meta charset="utf-8"><tit
   </tbody></table>
   <h2>How an RFQ flows</h2>
   <p>A contract specialist at an Army Corps district sends an RFQ with the statement of work and a response date. The form checks the date is in the future, records it in Hawaiʻi time, issues a reference such as <b>RQ-26-00014</b>, emails the specialist and alerts the business-development inbox. In the bid register it shows as New with a countdown. An owner is assigned and records the bid / no-bid decision, the bid package goes to subcontractors through a document room, quotes come in from registered vendors whose insurance is in date, and the request moves to Submitted, then Won or Lost. Seven days before the response date it rises to the top of the overview.</p>
+  <h2>Your brand, kept and modernised</h2>
+  <p>The design keeps what staff and contracting officers already know from environetinc.com: the navy (#003366) and green (#01A02C) of the current site, the "e" mark with its green honu flippers, the flared "Environet, Inc." lettering and the tagline "Preserving Earth's Resources for the Future". Type, spacing, buttons, the phone menu and a dark theme are new, built from the same palette, and the back office and this proposal use it too.</p>
   <h2>Content and imagery</h2>
   <p>The history, divisions, service lines and values come from the firm's own website. The UEI, CAGE code, NAICS codes, SBA certifications and the President's name come from the SBA profile, and every award comes from USAspending.gov with its agency, office, amount and dates as published. Nothing is invented: no staff numbers, safety statistics, bonding capacity, clearances, licenses or testimonials, and no award is described as complete. Three photographs are the firm's own, from its website; the rest are licensed from Wikimedia Commons, credited on the site and labelled "Illustrative photo" until the firm supplies its own. Bids, vendors, applicants and staff in these screenshots are clearly marked samples with fictitious names.</p>
   ${foot()}
@@ -432,6 +446,34 @@ ${sec.screens.map((s) => screenPages(sec, s)).join('')}
   <p style="margin:0 0 4px">A UXO technician can apply from a phone and photograph a certification card, and HR can check what is lapsing from the road.</p>
   ${phones([['m-apply', 'Job application'], ['m-admin-dashboard', 'Back-office overview'], ['m-admin-application', 'Applicant certifications']])}
   ${notes([['Upload from anywhere', 'Résumés and certificates can be PDFs or phone photos (JPG or PNG).'], ['Due first', 'The overview opens on what is due this week.'], ['One tap to call', 'Call or email the contracting office, vendor or applicant from the record.']])}
+  ${foot()}
+</section>
+
+<section class="page">
+  <header class="shot-head"><div><p class="eyebrow">Motion and interaction</p><h2>Quiet movement that explains the work</h2></div><p class="url">1440 × 900, frames from the working site</p></header>
+  <p style="margin:0 0 6px">Motion is used sparingly and only where it says something about the firm: a survey sweep for field geophysics, routes for a Pacific footprint, a record that builds year by year. Nothing flashes, nothing loops for long, and the tone stays as sober as the work.</p>
+  <div class="stills">
+    ${STILL('hero-entrance', 'Hero entrance', 'The title, summary and actions rise in turn as the page opens, over the firm\'s own survey photograph.')}
+    ${STILL('hero-sweep', 'Survey sweep', 'One slow sweep across range rings behind the registration tag, marking anomalies as it passes, then it holds still.')}
+    ${STILL('count-up', 'Capability strip and sourced figures', 'The firm\'s NAICS codes drift past under the hero (they stop on hover or focus, and have a pause button); USAspending and office figures count up once.')}
+    ${STILL('timeline', 'Past performance, year by year', 'A rail draws down the record as it scrolls past: the largest federal award signed each year, each linked to its USAspending record.')}
+  </div>
+  ${foot()}
+</section>
+<section class="page">
+  <header class="shot-head"><div><p class="eyebrow">Motion and interaction · continued</p><h2>Offices across the Pacific, and the details</h2></div><p class="url">1440 × 900</p></header>
+  <div class="stills">
+    ${STILL('map-drawing', 'Pacific map, drawing', 'Routes draw out from Honolulu to Guam and Colorado, then to award sites and the places the firm\'s own site says it has worked.')}
+    ${STILL('map-drawn', 'Pacific map, complete', 'Every point has a source, and the key below the map lists the same places as text for screen readers and print.')}
+    ${STILL('theme-wipe', 'Light and dark themes', 'Switching theme opens the dark palette as a circle from the button. Both themes keep AA contrast.')}
+    <div class="rules"><h3>Rules every effect follows</h3><ul>
+      <li>Visitors who ask their device for <b>reduced motion</b> get every element in its final state, with no movement.</li>
+      <li><b>Without JavaScript</b> nothing is hidden: the HTML holds the final figures, the full list and the drawn map.</li>
+      <li>Only position, fade and line-drawing are animated, so pages stay fast on older phones. No animation library.</li>
+      <li>Moving parts stop on hover and keyboard focus and have a pause button; nothing moves for more than five seconds unasked.</li>
+      <li>Also: a scroll-progress rule under the header, short cross-fades between pages, and a check that draws itself on the receipt page.</li>
+    </ul></div>
+  </div>
   ${foot()}
 </section>
 
